@@ -1,8 +1,12 @@
 package filters;
 
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
 
 public class FilterFactory {
 	private Map<String, Class<?>> myMap; 
@@ -14,12 +18,12 @@ public class FilterFactory {
 		myMap.put("timeFrame", Class.forName("TimeFrameFilter")); 
 	}
 	
-	public Filter getFilter(String commandName, ArrayList<Object> myParameters) throws InstantiationException, IllegalAccessException{
+	public Filter getFilter(String commandName) throws InstantiationException, IllegalAccessException, SecurityException, NoSuchMethodException, IllegalArgumentException, InvocationTargetException{
 	
 		Class<?> thisFilter = myMap.get(commandName); 
+		Constructor<?> filterConstructor = thisFilter.getConstructor();;  
+		Filter toReturn = (Filter) filterConstructor.newInstance(); 
 		
-		
-		return (Filter)thisFilter.newInstance(); 
-		
+		return toReturn;
 	}
 }
